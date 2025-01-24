@@ -1,34 +1,41 @@
 import axios from "axios";
 import { GET_USER_REQUEST, GET_USER_SUCCESS, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_REQUEST, REGISTER_SUCCESS } from "./ActionType";
-import { API_BASE_URL } from './config/api.js';
 
-export const register = userData => async (dispatch) => {
+const api = "http://localhost:8080";  // API base URL
+
+export const register = (userData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST });
 
     try {
-        const { data } = await axios.post(`${API_BASE_URL}/auth/signup`, userData);
-        console.log("register success", data);
+        const { data } = await axios.post(`${api}/auth/signup`, userData);
+        console.log("Register success", data);
         if (data.jwt) {
-            localStorage.setItem("jwt", data.jwt);  // Fixed: Store only the JWT token
-            dispatch({ type: REGISTER_SUCCESS, payload: data });  // Fixed: Corrected Payload to payload
+            localStorage.setItem("jwt", data.jwt);  // Store JWT token
+            dispatch({
+                type: REGISTER_SUCCESS,
+                payload: { user: data.user, jwt: data.jwt },
+            });
         }
     } catch (error) {
-        console.log(error);
+        console.log("Error during registration:", error);
     }
 };
 
-export const login = userData => async (dispatch) => {
+export const login = (userData) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-        const { data } = await axios.post(`${API_BASE_URL}/auth/login`, userData);  // Fixed: Correct URL
-        console.log("login success", data);
+        const { data } = await axios.post(`${api}/auth/signing`, userData);  // Correct URL for signin
+        console.log("Login success", data);
         if (data.jwt) {
-            localStorage.setItem("jwt", data.jwt);  // Fixed: Store only the JWT token
-            dispatch({ type: LOGIN_SUCCESS, payload: data });  // Fixed: Corrected Payload to payload
+            localStorage.setItem("jwt", data.jwt);  // Store JWT token
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: { user: data.user, jwt: data.jwt },
+            });
         }
     } catch (error) {
-        console.log(error);
+        console.log("Error during login:", error);
     }
 };
 
@@ -36,22 +43,20 @@ export const getUser = () => async (dispatch) => {
     dispatch({ type: GET_USER_REQUEST });
 
     try {
-        const { data } = await axios.get(`${API_BASE_URL}/api/users/profile`, {
+        const { data } = await axios.get(`${api}/api/users/profile`, {
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-            }
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}`,  // Use the JWT token
+            },
         });
-        if (data.jwt) {
-            localStorage.setItem("jwt", data.jwt);  // Fixed: Store only the JWT token
-            dispatch({ type: GET_USER_SUCCESS, payload: data });  // Fixed: Corrected Payload to payload
-        }
-        console.log("login successful");
+        dispatch({ type: GET_USER_SUCCESS, payload: data });
+        console.log("User data fetched successfully", data);
     } catch (error) {
-        console.log(error);
+        console.log("Error during fetching user data:", error);
     }
 };
 
 export const logout = () => async (dispatch) => {
     dispatch({ type: LOGOUT });
-    localStorage.clear();
+    localStorage.clear();  // Clear JWT and other data from localStorage
+    console.log("User logged out successfully");
 };

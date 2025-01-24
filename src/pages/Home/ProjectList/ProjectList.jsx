@@ -1,143 +1,58 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import ProjectCard from '@/pages/Project/ProjectCard';
-import { MagnifyingGlassIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
-import React from 'react'
-import { useState } from 'react';
-
-export const tags =["all",
-  "react",
-  "nextjs",
-  "spring boot",
-  "mysql",
-  "mongodb",
-  "angular",
-  "python",
-  "flask",
-  "django",
-];
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { fetchProjects, searchProjects } from "@/Redux/Project/Action";
+import ProjectCard from "@/pages/Project/ProjectCard"; // Assuming this is the card component for each project
 
 const ProjectList = () => {
+  const dispatch = useDispatch();
+  const { projects, searchProjects: searchedProjects, loading, error } = useSelector((state) => state.project);
 
-  const [keyword,setKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  const handleFilterChange=(section,value) =>{
-    console.log("value", value,section)
-  }
+  // Fetch all projects on initial load
+  useEffect(() => {
+    dispatch(fetchProjects({}));
+  }, [dispatch]);
 
-  const handleSearchChange=(e)=>{
-    setKeyword(e.target.value)
+  // Trigger the search action when the search keyword changes
+  useEffect(() => {
+    if (searchKeyword) {
+      dispatch(searchProjects(searchKeyword)); // Fetch projects based on search keyword
+    }
+  }, [searchKeyword, dispatch]);
 
-  }
+  // Projects to display: either search results or all projects
+  const projectsToDisplay = searchKeyword ? searchedProjects : projects;
+
   return (
-    <>
-    <div className='relative px-5 lg:px-0 lg:flex gap-5 justify-center py-5'>
-<section className='filterSection'>
-     <Card className='p-5 sticky top-10'>
+    <div className="relative px-5 lg:px-0 lg:flex gap-5 justify-center py-5">
+      {/* Search Bar */}
+      <div className="relative p-0 w-full lg:w-[20rem]">
+        <input
+          type="text"
+          placeholder="Search projects..."
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          className="w-full px-9 py-2 border rounded"
+        />
+      </div>
 
-        <div className='flex justify-between lg:w-[20rem]'>
-            <p className='text-xl -tracking-wider'>filters</p>
-            <Button variant="ghost" size="icon">
-             <MixerHorizontalIcon/>
-            </Button>
+      {/* Loading State */}
+      {loading && <p>Loading projects...</p>}
 
-        </div>
-           <CardContent className='mt-5'> 
-            <ScrollArea className="space-y-7 h-[70vh]">
-              <div>
-                <h1 className='pb-3 text-gray-400 border-b'>
-                  Category
-                </h1>
-                <div className='pt-5' >
-<RadioGroup className='space-y-3 pt-5' defaultValure='all'onValueChange={(value)=>handleFilterChange("category", value)}>
-  <div className='flex items-center gap-2'>
-    <RadioGroupItem value='all' id='r1'/>
-    <Label htmlFor='r1'>all</Label>
+      {/* Error State */}
+      {error && <p className="text-red-500">{error}</p>}
 
-  
-  </div>
-  <div className='flex items-center gap-2'>
-    <RadioGroupItem value='fullstack' id='r2'/>
-    <Label htmlFor='r2'>fullstack</Label>
-
-  
-  </div>
-  <div className='flex items-center gap-2'>
-    <RadioGroupItem value='frontend' id='r3'/>
-    <Label htmlFor='r3'>frontend</Label>
-
-  
-  </div>
-  <div className='flex items-center gap-2'>
-    <RadioGroupItem value='backend' id='r4'/>
-    <Label htmlFor='r4'>backend</Label>
-
-  
-  </div>
-</RadioGroup>
-                </div>
-              </div>
-
-              <div className='pt-9'>
-                <h1 className='pb-3 text-gray-400 border-b'>
-                 Tags
-                </h1>
-                <div  className='pt-5'> 
-<RadioGroup  className='space-y-3 pt-5' defaultValure='all' onValueChange={(value)=>handleFilterChange("tag", value)}>
-  {tags.map((item) =>(
-    <div key={item} className='flex items-center gap-2'> 
-    <RadioGroupItem value={item} id={`r1-${item}`}/>
-    <label htmlFor={item} id={`r1-${item}`}>
-    {item}</label>
-  </div>
-  ))}
-    
-  
-
-
-</RadioGroup>
-                </div>
-              </div>
-
-            </ScrollArea>
-
-           </CardContent>
-
-     </Card>
-</section>
-
-<section className='projectListSection w-full lg:w-[48rem] '> 
-<div className='flex gap-2 items-center pb-5 justify-between'>
-  <div className='relative p-0 w-full'>
-    <Input onChange={handleSearchChange}   placeholder="search project" className='40% px-9'/>
-<MagnifyingGlassIcon className='absolute top-3 left-4'/>
-  </div>
-
-</div>
-
-<div>
-  <div className='space-y-5 min-h-[74vh]'>
-     {
-      keyword?[1,1,1].map((item)=> (<ProjectCard key={item}/>)):
-    [1,1,1,1,1].map((item)=> (<ProjectCard key={item}/>))
-} 
-
-{/* {
-      keyword?[1,1,1,].map((item)=> (<div key={item}>project card</div>)):
-    [1,1,1,1,1].map((item)=> (<div key={item}>project card</div>))
-} */}
-  </div>
-</div>
-
-
-</section>
+      {/* Project Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {projectsToDisplay && projectsToDisplay.length > 0 ? (
+          projectsToDisplay.map((item) => <ProjectCard key={item.id} item={item} />)
+        ) : (
+          <p>No projects found.</p>
+        )}
+      </div>
     </div>
-    </>
-  )
-}
+  );
+};
 
-export default ProjectList
+export default ProjectList;
