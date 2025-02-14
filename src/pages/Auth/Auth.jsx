@@ -14,7 +14,7 @@ return (
             <div className='loginBox w-full px-10 space-y-5'>
                 {active?<Signup/>:<Login/>}
                 <div>
-                    <span>already have an account</span>
+                    <span>already have an account?</span>
                     <Button variant="ghost" onClick={()=>setActive(!active)}>
                         {active? "signin": "signup"}
                     </Button>

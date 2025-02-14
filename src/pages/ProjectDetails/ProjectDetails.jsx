@@ -24,30 +24,30 @@ const ProjectDetails = () => {
     }
   }, [dispatch, id]);
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
+  if (loading) return <p className="text-center mt-10 text-gray-800">Loading...</p>;
+  if (error) return <p className="text-center mt-10 text-red-600">Error: {error}</p>;
 
   return (
     <div className="mt-5 lg:px-10">
       <div className="lg:flex gap-5 justify-between pb-4">
         {/* Project Details Section */}
-        <ScrollArea className="h-screen lg:w-[69%] pr-2">
-          <div className="text-gray-400 pb-10 w-full">
-            <h1 className="text-lg font-semibold pb-5">{projectDetails?.name || "Project Name"}</h1>
+        <ScrollArea className="h-screen lg:w-[72%] pr-2">
+          <div className="text-gray-800 pb-10 w-full">
+            <h1 className="text-lg font-semibold pb-5 text-black">{projectDetails?.name || "Project Name"}</h1>
 
-            <div className="space-y-5 pb-10 text-sm">
+            <div className="space-y-5 pb-10 text-sm text-gray-600">
               {/* Description */}
               <p className="w-full md:max-w-lg lg:max-w-xl">{projectDetails?.description || "No description available."}</p>
 
               {/* Project Lead */}
               <div className="flex">
-                <p className="w-36">Project Lead:</p>
+                <p className="w-36 text-gray-700">Project Lead:</p>
                 <Badge>{projectDetails?.owner.fullName}</Badge>
               </div>
 
               {/* Team Members */}
               <div className="flex items-center">
-                <p className="w-36">Team Members:</p>
+                <p className="w-36 text-gray-700">Team Members:</p>
                 <div className="flex items-center gap-2">
                   {projectDetails?.team?.length > 0
                     ? projectDetails.team.map((member, index) => (
@@ -65,7 +65,7 @@ const ProjectDetails = () => {
 
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="sm" variant="outline" className="ml-2">
+                    <Button size="sm" variant="outline" className="ml-2 text-gray-800">
                       <span>Invite</span>
                       <PlusIcon className="w-3 h-3 ml-1" />
                     </Button>
@@ -80,25 +80,31 @@ const ProjectDetails = () => {
 
               {/* Category */}
               <div className="flex">
-                <p className="w-36">Category:</p>
+                <p className="w-36 text-gray-700">Category:</p>
                 <p>{projectDetails?.category || "N/A"}</p>
               </div>
             </div>
 
             {/* Tasks Section */}
             <section>
-              <p className="py-5 border-b text-lg -tracking-wider">Tasks</p>
-              <div className="lg:flex md:flex gap-3 justify-between py-5">
+              <p className="py-5 border-b text-lg text-gray-900 -tracking-wider">Tasks</p>
+
+              {/* ✅ Grid Layout for Tasks (Moves "Done" to the Next Line) */}
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-3">
                 <IssueList status="pending" title="Todo List" />
                 <IssueList status="in_progress" title="In Progress" />
-                <IssueList status="done" title="Done" />
+
+                {/* ✅ Done Moves to Next Line */}
+                <div className="col-span-2 flex justify-center">
+                  <IssueList status="done" title="Done" />
+                </div>
               </div>
             </section>
           </div>
         </ScrollArea>
 
-        {/* Chat Section */}
-        <div className="lg:w-[30%] rounded-md sticky right-5 top-10">
+        {/* ✅ Reduced Chat Box Width to Avoid Overlap */}
+        <div className="lg:w-[25%] rounded-md sticky right-5 top-10">
           <ChatBox />
         </div>
       </div>
