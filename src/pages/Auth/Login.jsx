@@ -6,79 +6,60 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
 const Login = () => {
-    const dispatch =useDispatch()
-    const form=useForm({
-              defaultValue:{
-                  Email:"",
-                  password: "",
-              
+  const dispatch = useDispatch();
+  const form = useForm({
+      defaultValues: {
+          email: "",
+          password: "",
+      },
+  });
 
-                 
-      
-              },
-          });
-      
-          const onSubmit=(data)=>{
-            dispatch(login(data))
-              console.log('login project data', data);
-          };
-return (
-  <div className="space-y-5">
-      <h1 >LOGIN</h1> 
-      <Form {...form}>
+  const onSubmit = (data) => {
+      dispatch(login(data));
+      console.log('Login Data:', data);
+  };
 
-<form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}> 
-  
+  return (
 
-<FormField control={form.control}  
-  name="email"
-  render={({field})=>(<FormItem>
-      <FormControl>
-          <Input  {...field} 
-          type="text"
-          className="border w-full border-gray-700 py-5 px-5"
-          placeholder=" email..."
-          
-          
-          />
-      </FormControl>
-      <FormMessage/>
-  </FormItem>)}
-  
-  />
-
-<FormField control={form.control}  
-  name="password"
-  render={({field})=>(<FormItem>
-      <FormControl>
-          <Input  {...field} 
-          type="text"
-          className="border w-full border-gray-700 py-5 px-5"
-          placeholder=" password..."
-          
-          
-          />
-      </FormControl>
-      <FormMessage/>
-  </FormItem>)}
-  
-  />
-  
-
-
-
-
- <Button type='submit' className="w-full mt-5">Login</Button>   
-
-
-
-
-
-</form>
-</Form>
     
-  </div>
-)
-}
+      <div className="space-y-5 bg-white p-6 rounded-lg shadow-md">
+          <h1 className="w-full text-center text-3xl font-bold text-purple-600">Login</h1>
 
-export default Login
+          <Form {...form}>
+              <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField control={form.control} name="email"
+                      render={({ field }) => (
+                          <FormItem>
+                              <FormControl>
+                                  <Input {...field} type="email"
+                                      className="border w-full border-gray-700 py-3 px-4 rounded-md"
+                                      placeholder="Email..." />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+
+                  <FormField control={form.control} name="password"
+                      render={({ field }) => (
+                          <FormItem>
+                              <FormControl>
+                                  <Input {...field} type="password"
+                                      className="border w-full border-gray-700 py-3 px-4 rounded-md"
+                                      placeholder="Password..." />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+
+                  <Button type='submit' className="w-full mt-5 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-md">
+                      Login
+                  </Button>
+              </form>
+          </Form>
+      </div>
+  );
+};
+
+export default Login;

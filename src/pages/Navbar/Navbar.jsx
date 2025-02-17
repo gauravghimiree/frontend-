@@ -18,11 +18,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="border-b py-4 px-5 flex items-center justify-between">
+    <div className="border-b py-4 px-5 flex items-center justify-between bg-[linear-gradient(135deg,_#2e2a72,_#a044ff)] text-white">
       <div className="flex items-center gap-3">
-        <p onClick={() => navigate("/")} className="cursor-pointer">
-          Project Management
-        </p>
+        <button onClick={() => navigate("/")} className="cursor-pointer font-bold">
+          EFFICIO
+        </button>
         <Dialog>
           <DialogTrigger>
             <Button variant="ghost">New Project</Button>
@@ -42,7 +42,7 @@ const Navbar = () => {
       <div className="flex gap-3 items-center">
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant="outline" size="icon" className="rounded-full border-2 border-gray-500">
+            <Button variant="outline" size="icon" className="rounded-full border-2 border-gray-500 bg- (#f5e0e6, #cfe2f3, #e2f7e1) ">
               <PersonIcon />
             </Button>
           </DropdownMenuTrigger>

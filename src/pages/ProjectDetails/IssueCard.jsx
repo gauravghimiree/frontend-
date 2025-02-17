@@ -22,7 +22,7 @@ const IssueCard = ({ item, projectId }) => {
   };
 
   return (
-    <Card className="rounded-md py-1 pb-2">
+    <Card className="rounded-md py-1 pb-2 p-5 w-full lg:max-w-3xl bg-[#e0e0e0] hover:bg-[#f5f5f5] hover:text-[#2e2a72]">
       <CardHeader className="py-0 pb-1">
         <div className="flex justify-between items-center">
           <CardTitle
@@ -62,10 +62,10 @@ const IssueCard = ({ item, projectId }) => {
             <DropdownMenuTrigger>
               <Button
                 size="icon"
-                className="bg-gray-900 hover:text-black text-white rounded-full"
+                className="bg-blue-900 hover:text-black text-white rounded-full"
               >
-                <Avatar>
-                  <AvatarFallback>
+                <Avatar >
+                  <AvatarFallback className="bg-blue-900">
                     <PersonIcon />
                   </AvatarFallback>
                 </Avatar>

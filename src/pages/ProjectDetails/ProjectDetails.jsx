@@ -54,7 +54,7 @@ const ProjectDetails = () => {
                         <div key={index} className="relative">
                           {/* Avatar with Tooltip on Hover */}
                           <Avatar className="cursor-pointer" title={member?.fullName || "No Name"}>
-                            <AvatarFallback>
+                          <AvatarFallback className="bg-gradient-to-r from-[#f5e0e6] via-[#cfe2f3] to-[#e2f7e1]">
                               {member?.fullName?.charAt(0) || member?.email?.charAt(0) || "U"}
                             </AvatarFallback>
                           </Avatar>

@@ -8,66 +8,69 @@ import { useDispatch } from "react-redux";
 const Signup = () => {
   const dispatch = useDispatch();
   const form = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-      fullName: "",
-    },
+      defaultValues: {
+          fullName: "",
+          email: "",
+          password: "",
+      },
   });
 
   const onSubmit = (data) => {
-    dispatch(register(data));  // Correctly dispatch the register action
-    console.log('Registration data:', data);
+      dispatch(register(data));
+      console.log('Signup Data:', data);
   };
 
   return (
-    <div className="space-y-5">
-      <h1>Register</h1>
-      <Form {...form}>
-        <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input {...field} type="text" className="border w-full border-gray-700 py-5 px-5" placeholder="Full Name..." />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <div className="space-y-5 bg-white p-6 rounded-lg shadow-md">
+          <h1 className="w-full text-center text-3xl font-bold text-purple-600">Register</h1>
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input {...field} type="text" className="border w-full border-gray-700 py-5 px-5" placeholder="Email..." />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <Form {...form}>
+              <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField control={form.control} name="fullName"
+                      render={({ field }) => (
+                          <FormItem>
+                              <FormControl>
+                                  <Input {...field} type="text"
+                                      className="border w-full border-gray-700 py-3 px-4 rounded-md"
+                                      placeholder="Full Name..." />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                      )}
+                  />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input {...field} type="text" className="border w-full border-gray-700 py-5 px-5" placeholder="Password..." />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormField control={form.control} name="email"
+                      render={({ field }) => (
+                          <FormItem>
+                              <FormControl>
+                                  <Input {...field} type="email"
+                                      className="border w-full border-gray-700 py-3 px-4 rounded-md"
+                                      placeholder="Email..." />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                      )}
+                  />
 
-          <Button type="submit" className="w-full mt-5">Register</Button>
-        </form>
-      </Form>
-    </div>
+                  <FormField control={form.control} name="password"
+                      render={({ field }) => (
+                          <FormItem>
+                              <FormControl>
+                                  <Input {...field} type="password"
+                                      className="border w-full border-gray-700 py-3 px-4 rounded-md"
+                                      placeholder="Password..." />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+
+                  <Button type="submit" className="w-full mt-5 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-md">
+                      Register
+                  </Button>
+              </form>
+          </Form>
+      </div>
   );
 };
 

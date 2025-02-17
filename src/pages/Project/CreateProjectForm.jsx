@@ -7,20 +7,31 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { createProjects } from "@/Redux/Project/Action";
+import { useState } from "react";
 
 const CreateProjectForm = () => {
   const dispatch = useDispatch();
+  const [newTag, setNewTag] = useState("");
 
   // Hardcoded list of tags
   const availableTags = ["JavaScript", "React", "Node.js", "CSS", "HTML", "Vue"];
 
-  // Function to handle tag selection
+  // Function to handle tag selection or addition
   const handleTagsChange = (newTag) => {
     const currentTags = form.getValues("tags");
     const updatedTags = currentTags.includes(newTag)
       ? currentTags.filter((tag) => tag !== newTag)
       : [...currentTags, newTag];
     form.setValue("tags", updatedTags);
+  };
+
+  // Handle manual tag addition
+  const handleNewTag = (event) => {
+    if (event.key === "Enter" && newTag.trim() !== "") {
+      event.preventDefault();
+      handleTagsChange(newTag.trim());
+      setNewTag("");
+    }
   };
 
   const form = useForm({
@@ -129,8 +140,17 @@ const CreateProjectForm = () => {
                   </Select>
                 </FormControl>
 
+                {/* New Tag Input */}
+                <Input
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyDown={handleNewTag}
+                  placeholder="Add custom tag and press Enter"
+                  className="border w-full border-gray-700 py-2 px-4 mt-2"
+                />
+
                 {/* Display selected tags */}
-                <div className="flex gap-1 flex-wrap">
+                <div className="flex gap-1 flex-wrap mt-2">
                   {field.value.map((tag) => (
                     <div
                       key={tag}

@@ -28,7 +28,7 @@ const ProjectCard = ({ item }) => {
   };
 
   return (
-    <Card className="p-5 w-full lg:max-w-3xl">
+    <Card className="p-5 w-full lg:max-w-3xl bg-[#e0e0e0] hover:bg-[#f5f5f5] hover:text-[#2e2a72]">
       <div className="space-y-5">
         <div className="space-y-2">
           <div className="flex justify-between">
