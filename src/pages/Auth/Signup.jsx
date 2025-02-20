@@ -1,3 +1,11 @@
+
+
+
+
+
+
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react"; // Import eye icons
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -8,6 +16,8 @@ import { toast } from 'react-toastify'; // Import toast
 
 const Signup = () => {
   const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  
   const form = useForm({
       defaultValues: {
           fullName: "",
@@ -21,18 +31,13 @@ const Signup = () => {
           await dispatch(register(data)); // Assuming register returns a promise
           toast.success('Registered successfully!'); // Show success notification
       } catch (error) {
-          // Check if the error response contains a specific message
-          const errorMessage = error.response?.data?.message || 'Email already exists'; // Default to 'Email already exists'
-          toast.error(errorMessage); // Show error notification
+          const errorMessage = error.response?.data?.message || 'Email already exists';
+          toast.error(errorMessage);
       }
       console.log('Signup Data:', data);
   };
 
   return (
-     <>
-     {/* <div>
-        ABCD
-     </div> */}
       <div className="space-y-5 bg-white p-6 rounded-lg">
           <h1 className="w-full text-center text-3xl font-bold text-purple-600">Register</h1>
 
@@ -64,13 +69,24 @@ const Signup = () => {
                       )}
                   />
 
+                  {/* Password Field with Eye Icon */}
                   <FormField control={form.control} name="password"
                       render={({ field }) => (
                           <FormItem>
                               <FormControl>
-                                  <Input {...field} type="password"
-                                      className="border w-full border-gray-700 py-3 px-4 rounded-md"
-                                      placeholder="Password..." />
+                                  <div className="relative">
+                                      <Input {...field} 
+                                          type={showPassword ? "text" : "password"} 
+                                          className="border w-full border-gray-700 py-3 px-4 rounded-md pr-12"
+                                          placeholder="Password..." 
+                                      />
+                                      <button type="button" 
+                                          className="absolute inset-y-0 right-3 flex items-center"
+                                          onClick={() => setShowPassword(!showPassword)}
+                                      >
+                                          {showPassword ? <EyeOff className="w-5 h-5 text-gray-600"/> : <Eye className="w-5 h-5 text-gray-600"/>}
+                                      </button>
+                                  </div>
                               </FormControl>
                               <FormMessage />
                           </FormItem>
@@ -83,7 +99,6 @@ const Signup = () => {
               </form>
           </Form>
       </div>
-     </>
   );
 };
 
