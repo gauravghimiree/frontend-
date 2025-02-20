@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -13,35 +12,32 @@ const CreateProjectForm = () => {
   const dispatch = useDispatch();
   const [newTag, setNewTag] = useState("");
 
-  // Hardcoded list of tags
-  const availableTags = ["JavaScript", "React", "Node.js", "CSS", "HTML", "Vue"];
-
-  // Function to handle tag selection or addition
-  const handleTagsChange = (newTag) => {
-    const currentTags = form.getValues("tags");
-    const updatedTags = currentTags.includes(newTag)
-      ? currentTags.filter((tag) => tag !== newTag)
-      : [...currentTags, newTag];
-    form.setValue("tags", updatedTags);
-  };
-
-  // Handle manual tag addition
-  const handleNewTag = (event) => {
-    if (event.key === "Enter" && newTag.trim() !== "") {
-      event.preventDefault();
-      handleTagsChange(newTag.trim());
-      setNewTag("");
-    }
-  };
-
   const form = useForm({
     defaultValues: {
       name: "",
       description: "",
       category: "",
-      tags: ["JavaScript", "React"], // Default selected tags
+      tags: [], // Only custom tags will be added
     },
   });
+
+  // Handle manual tag addition
+  const handleNewTag = (event) => {
+    if (event.key === "Enter" && newTag.trim() !== "") {
+      event.preventDefault();
+      const currentTags = form.getValues("tags");
+      if (!currentTags.includes(newTag.trim())) {
+        form.setValue("tags", [...currentTags, newTag.trim()]);
+      }
+      setNewTag("");
+    }
+  };
+
+  // Remove tag
+  const removeTag = (tag) => {
+    const updatedTags = form.getValues("tags").filter((t) => t !== tag);
+    form.setValue("tags", updatedTags);
+  };
 
   const onSubmit = (data) => {
     dispatch(createProjects(data));
@@ -97,68 +93,43 @@ const CreateProjectForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select
-                    defaultValue="fullstack"
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                    }}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="fullstack">Full Stack</SelectItem>
-                      <SelectItem value="frontend">Frontend</SelectItem>
-                      <SelectItem value="backend">Backend</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    {...field}
+                    type="text"
+                    className="border w-full border-gray-700 py-5 px-5"
+                    placeholder="Project category..."
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Tags Select Field */}
+          {/* Custom Tags Field */}
           <FormField
             control={form.control}
             name="tags"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={handleTagsChange}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Tags" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableTags.map((tag) => (
-                        <SelectItem key={tag} value={tag}>
-                          {tag}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onKeyDown={handleNewTag}
+                    placeholder="Add custom tag and press Enter"
+                    className="border w-full border-gray-700 py-2 px-4"
+                  />
                 </FormControl>
 
-                {/* New Tag Input */}
-                <Input
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  onKeyDown={handleNewTag}
-                  placeholder="Add custom tag and press Enter"
-                  className="border w-full border-gray-700 py-2 px-4 mt-2"
-                />
-
-                {/* Display selected tags */}
+                {/* Display selected custom tags */}
                 <div className="flex gap-1 flex-wrap mt-2">
                   {field.value.map((tag) => (
                     <div
                       key={tag}
-                      onClick={() => handleTagsChange(tag)}
                       className="cursor-pointer flex rounded-full items-center border gap-2 px-4 py-1"
                     >
                       <span className="text-sm">{tag}</span>
-                      <Cross1Icon className="h-3 w-3" />
+                      <Cross1Icon className="h-3 w-3" onClick={() => removeTag(tag)} />
                     </div>
                   ))}
                 </div>

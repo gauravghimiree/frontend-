@@ -1,10 +1,10 @@
 import * as actionTypes from './ActionTypes';
 
 const initialState = {
-  messages: [], // Holds the list of messages
-  loading: false, // Indicates whether data is being fetched or sent
-  error: null, // Holds any error messages from failed actions
-  chat: null, // Holds chat-specific data (e.g., details about the chat/project)
+  messages: [], // List of messages with id, content, createdAt, senderName, etc.
+  loading: false,
+  error: null,
+  chat: null, // Chat details (e.g., project chat)
 };
 
 const ChatReducer = (state = initialState, action) => {
@@ -12,45 +12,49 @@ const ChatReducer = (state = initialState, action) => {
     case actionTypes.FETCH_MESSAGES_REQUEST:
     case actionTypes.SEND_MESSAGE_REQUEST:
     case actionTypes.FETCH_CHAT_MESSAGES_REQUEST:
+    case actionTypes.FETCH_CHAT_BY_PROJECT_REQUEST:
       return {
         ...state,
         loading: true,
-        error: null, // Reset error when starting a new request
+        error: null,
       };
 
+    // For fetching messages (or chat messages) the backend now returns objects with senderName
     case actionTypes.FETCH_MESSAGES_SUCCESS:
     case actionTypes.FETCH_CHAT_MESSAGES_SUCCESS:
       return {
         ...state,
-        loading: false, // Request completed
-        messages: action.messages, // Update with the fetched messages
+        loading: false,
+        messages: action.messages, // Each message includes id, content, createdAt, senderName
       };
 
+    // When sending a message, append the returned message (with senderName) to the list
     case actionTypes.SEND_MESSAGE_SUCCESS:
       return {
         ...state,
-        loading: false, // Request completed
-        messages: [...state.messages, action.message], // Append the new message
+        loading: false,
+        messages: [...state.messages, action.message],
       };
 
     case actionTypes.FETCH_CHAT_BY_PROJECT_SUCCESS:
       return {
         ...state,
-        loading: false, // Request completed
-        chat: action.chat, // Update the chat details
+        loading: false,
+        chat: action.chat,
       };
 
     case actionTypes.FETCH_MESSAGES_FAILURE:
     case actionTypes.SEND_MESSAGE_FAILURE:
     case actionTypes.FETCH_CHAT_MESSAGES_FAILURE:
+    case actionTypes.FETCH_CHAT_BY_PROJECT_FAILURE:
       return {
         ...state,
-        loading: false, // Request failed
-        error: action.error, // Update with the error message
+        loading: false,
+        error: action.error,
       };
 
     default:
-      return state; // Return the current state for any unknown action types
+      return state;
   }
 };
 

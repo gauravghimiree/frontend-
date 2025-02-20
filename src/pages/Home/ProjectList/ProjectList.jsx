@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { fetchProjects, searchProjects } from "@/Redux/Project/Action";
+import { fetchProjects, searchProjects, deleteProject } from "@/Redux/Project/Action";
 import ProjectCard from "@/pages/Project/ProjectCard"; // Assuming this is the card component for each project
 
 const ProjectList = () => {
@@ -24,6 +24,11 @@ const ProjectList = () => {
   // Projects to display: either search results or all projects
   const projectsToDisplay = searchKeyword ? searchedProjects : projects;
 
+  // Delete project handler
+  const handleDeleteProject = (projectId) => {
+    dispatch(deleteProject(projectId)); // Dispatch the delete action
+  };
+
   return (
     <div className="relative px-5 lg:px-0 lg:flex gap-5 justify-center py-5">
       {/* Search Bar */}
@@ -46,7 +51,9 @@ const ProjectList = () => {
       {/* Project Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {projectsToDisplay && projectsToDisplay.length > 0 ? (
-          projectsToDisplay.map((item) => <ProjectCard key={item.id} item={item} />)
+          projectsToDisplay.map((item) => (
+            <ProjectCard key={item.id} item={item} onDelete={handleDeleteProject} />
+          ))
         ) : (
           <p>No projects found.</p>
         )}
